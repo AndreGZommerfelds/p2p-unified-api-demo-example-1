@@ -1,0 +1,45 @@
+{
+  "transactionId": "polkadot-westend-1743781723083",
+  "error": null,
+  "result": {
+    "amount": 3,
+    "createdAt": "2025-04-04T15:48:43.824Z",
+    "extraData": {
+      "unsignedTransaction": "0xac0406000b0030ef7dba020396835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c",
+      "stashAccountAddress": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q",
+      "rewardDestinationType": "account",
+      "rewardDestination": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q"
+    }
+  },
+  "stakerAddress": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q",
+  "chain": "polkadot",
+  "network": "westend",
+  "rawTransaction": "0xac0406000b0030ef7dba020396835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c",
+  "signedTransaction": "0x4902840096835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c01d6c3020b6e29a4c5f1f248edda1edfd38da150df15c968207a5ef90234831e08d35220cd1d9bfea87ba6ee3b9f75543cf4ba175862062981e5aee713d5fb178b35000c000006000b0030ef7dba020396835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c",
+  "broadcastResult": {
+    "error": null,
+    "result": {
+      "status": "failed",
+      "extraData": {
+        "network": "westend",
+        "signedTransaction": "0x4902840096835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c01d6c3020b6e29a4c5f1f248edda1edfd38da150df15c968207a5ef90234831e08d35220cd1d9bfea87ba6ee3b9f75543cf4ba175862062981e5aee713d5fb178b35000c000006000b0030ef7dba020396835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c",
+        "blockHash": "0xd201d022f215c50bd0dfe7a7f5d43b33aa406ba5500b84067912700a05022af3",
+        "blockId": 25457479,
+        "extrinsicId": 2,
+        "transactionHash": "0x487f9e617128ef1ce4a75723b19e6050f3d70b37e547a03cb5d605822c5980d2",
+        "signerAccount": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q",
+        "data": {
+          "args": {
+            "value": "3,000,000,000,000",
+            "payee": {
+              "Account": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q"
+            }
+          },
+          "method": "bond",
+          "section": "staking"
+        },
+        "createdAt": "2025-04-04T15:49:09.504Z"
+      }
+    }
+  }
+}

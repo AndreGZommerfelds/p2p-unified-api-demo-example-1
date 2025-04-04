@@ -9,7 +9,7 @@ alwaysApply: true
 
 This document outlines the frontend implementation guidelines for the P2P.ORG Staking Showcase Application. The primary goal is to provide a functional, reference implementation demonstrating how crypto intermediaries (such as exchanges, wallets, and custodians) can integrate P2P.ORG's Unified API to offer staking, unstaking, and withdrawal functionalities to their end-users.
 
-The application will feature a clean user interface allowing users to connect their wallets and interact with core staking flows. All interactions with the P2P.ORG Unified API will occur securely via an internal API proxy layer (implemented as Next.js API routes/Vercel Serverless Functions) to manage authentication (Bearer token) and abstract the direct API calls.
+The application will feature a clean user interface allowing users to interact with core staking flows. All interactions with the P2P.ORG Unified API will occur securely via an internal API proxy layer (implemented as Next.js API routes/Vercel Serverless Functions) to manage authentication (Bearer token) and abstract the direct API calls.
 
 *Target Audience*
 
@@ -24,9 +24,8 @@ Framework: Next.js (using the App Router)
 - UI Library: Shadcn UI
 - Styling: Tailwind CSS (as configured by Shadcn UI)
 - Icons: Lucide React (lucide-react)
-- Wallet Connection: Wagmi + Viem + RainbowKit / Web3Modal (or similar standard libraries)
 - Forms: React Hook Form + Zod (for validation on staking/unstaking amount inputs)
-- State Management: Zustand / Jotai / React Context (Choose based on complexity, start simple for managing wallet state, balances, transaction status)
+- State Management: Zustand / Jotai / React Context (Choose based on complexity, start simple)
 - Data Fetching Client: Native fetch API, SWR, or React Query (for calling the internal /api proxy routes)
 - API Proxy Runtime: Node.js (via Vercel Serverless Functions / Next.js API routes)
 
@@ -126,16 +125,16 @@ p2p-staking-showcase/
 │   ├── withdraw.ts        # Handles POST /api/v1/unified/staking/withdraw
 │   └── broadcast.ts       # Handles POST /api/v1/unified/transaction/broadcast
 ├── app/                   # Next.js App Router: Single Page UI
-│   ├── layout.tsx         # Root layout (includes wallet/network provider setup)
+│   ├── layout.tsx         # Root layout
 │   ├── page.tsx           # THE SINGLE PAGE: Contains all UI sections/components
 │   └── globals.css
 ├── components/            # Shared & UI Components for the single page
 │   ├── ui/                # Shadcn UI components
-│   ├── layout/            # Layout components (Navbar, Footer, WalletConnect Button, NetworkSwitcher)
-│   ├── sections/          # Major sections of the single page (Portfolio, StakingArea, History)
+│   ├── layout/            # Layout components
+│   ├── sections/          # Major sections of the single page (staking ui)
 │   │   ├── PortfolioSection.tsx
 │   │   └── StakingSection.tsx # Contains forms/modals for stake/unstake/withdraw
-│   └── shared/            # Common components (AssetInput, TxStatusLabel, ConnectWalletPrompt)
+│   └── shared/            # Common components (AssetInput, TxStatusLabel)
 ├── config/                # Configuration files
 │   └── secrets/           # Network-specific secrets (e.g., JSON keyfiles - MUST BE IN .gitignore)
 │       ├── secret_example_network1.json
