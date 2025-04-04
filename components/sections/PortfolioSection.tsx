@@ -112,7 +112,7 @@ export function PortfolioSection() {
     }
   };
 
-  const handleUnstake = async () => {
+  const handleUnstake = async (amount: string) => {
     try {
       setIsLoading(true);
       console.log("Starting unstake process");
@@ -123,6 +123,12 @@ export function PortfolioSection() {
         network: selectedNetwork,
         stakerAddress: selectedWalletAddress,
       };
+
+      // Add amount if provided
+      if (amount) {
+        unstakeRequest.amount = amount;
+        console.log(`Including amount: ${amount} in unstake request`);
+      }
 
       console.log("Creating unstake request:", unstakeRequest);
 
@@ -141,6 +147,7 @@ export function PortfolioSection() {
       // Save transaction data and update state
       setTransactionData({
         transactionId: transactionId,
+        amount: amount,
       });
       setTransactionState("created");
     } catch (error) {
@@ -379,6 +386,7 @@ export function PortfolioSection() {
                   transactionId={transactionData.transactionId || ""}
                   chain={selectedChain}
                   network={selectedNetwork}
+                  amount={transactionData.amount || ""}
                   transactionHash={transactionData.transactionHash}
                   explorerUrl={transactionData.explorerUrl}
                   status={transactionData.status}

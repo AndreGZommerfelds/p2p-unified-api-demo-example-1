@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
       chain,
       network,
       stakerAddress,
+      amount,
       transactionId: clientTransactionId,
     } = body;
 
@@ -42,30 +43,39 @@ export async function POST(req: NextRequest) {
     // Make request to P2P.ORG API
     console.log("Making request to P2P.ORG API...");
     const apiKey = process.env.P2P_API_KEY;
-    const apiUrl = process.env.P2P_API_URL || "https://apis.p2p.org/api/v1/rpc";
+    const apiBaseUrl =
+      process.env.P2P_API_URL || "https://api-test-holesky.p2p.org/api/v1";
+
+    // Use the proper REST endpoint for unstaking
+    const apiUrl = `${apiBaseUrl}/unified/staking/unstake`;
+    console.log(`Using API URL: ${apiUrl}`);
 
     try {
-      // Create the request to P2P.ORG API
-      console.log("Sending request with payload:", {
+      // Prepare request body based on whether amount is provided
+      const requestBody: any = {
         chain,
         network,
         stakerAddress,
-      });
+      };
+
+      // Add extra object with amount if provided
+      if (amount) {
+        requestBody.extra = {
+          amount: amount,
+        };
+        console.log(`Including amount ${amount} in extra object`);
+      }
+
+      // Create the request to P2P.ORG API
+      console.log("Sending request with payload:", requestBody);
 
       const apiResponse = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-Key": apiKey || "",
+          Authorization: `Bearer ${apiKey || ""}`,
         },
-        body: JSON.stringify({
-          method: "unified.staking.unstake",
-          params: {
-            chain,
-            network,
-            stakerAddress,
-          },
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       // Check for HTTP errors
@@ -119,6 +129,7 @@ export async function POST(req: NextRequest) {
           originatingRequest: {
             chain,
             network,
+            amount: amount || undefined,
           },
         },
       };

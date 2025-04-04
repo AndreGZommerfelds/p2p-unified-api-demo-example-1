@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { broadcastTransactionToAPI } from "@/lib/broadcastUtils";
 
 export async function POST(req: NextRequest) {
-  console.log("Broadcast transaction API endpoint called");
+  console.log("Transaction broadcast API endpoint called");
 
   try {
     const body = await req.json();

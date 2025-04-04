@@ -25,22 +25,24 @@ export async function POST(req: NextRequest) {
 
     // Make request to P2P.ORG API
     const apiKey = process.env.P2P_API_KEY;
-    const apiUrl = process.env.P2P_API_URL || "https://apis.p2p.org/api/v1/rpc";
+    const apiBaseUrl =
+      process.env.P2P_API_URL || "https://api-test-holesky.p2p.org/api/v1";
+
+    // Use the proper REST endpoint for staking
+    const apiUrl = `${apiBaseUrl}/unified/staking/stake`;
+    console.log(`[createStake] Using API URL: ${apiUrl}`);
 
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-Key": apiKey || "",
+        Authorization: `Bearer ${apiKey || ""}`,
       },
       body: JSON.stringify({
-        method: "unified.staking.stake",
-        params: {
-          chain,
-          network,
-          stakerAddress,
-          amount: parseFloat(amount),
-        },
+        chain,
+        network,
+        stakerAddress,
+        amount: parseFloat(amount),
       }),
     });
 

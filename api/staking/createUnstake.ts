@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: NextRequest) {
   try {
-    const { chain, network, stakerAddress } = await req.json();
+    const { chain, network, stakerAddress, amount } = await req.json();
 
     // Validate required fields
     if (!chain || !network || !stakerAddress) {
@@ -15,7 +15,9 @@ export async function POST(req: NextRequest) {
     }
 
     console.log(
-      `[createUnstake] Creating unstake request for ${chain}/${network}, staker: ${stakerAddress}`
+      `[createUnstake] Creating unstake request for ${chain}/${network}, staker: ${stakerAddress}${
+        amount ? `, amount: ${amount}` : ""
+      }`
     );
 
     // Generate our own transaction ID with a specific format to ensure uniqueness
@@ -25,22 +27,36 @@ export async function POST(req: NextRequest) {
 
     // Make request to P2P.ORG API
     const apiKey = process.env.P2P_API_KEY;
-    const apiUrl = process.env.P2P_API_URL || "https://apis.p2p.org/api/v1/rpc";
+    const apiBaseUrl =
+      process.env.P2P_API_URL || "https://api-test-holesky.p2p.org/api/v1";
+
+    // Use the proper REST endpoint for unstaking
+    const apiUrl = `${apiBaseUrl}/unified/staking/unstake`;
+    console.log(`[createUnstake] Using API URL: ${apiUrl}`);
+
+    // Prepare request body based on whether amount is provided
+    const requestBody: any = {
+      chain,
+      network,
+      stakerAddress,
+    };
+
+    // Add extra object with amount if provided
+    if (amount) {
+      requestBody.extra = {
+        amount: amount,
+      };
+    }
+
+    console.log(`[createUnstake] Request body:`, JSON.stringify(requestBody));
 
     const response = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-Key": apiKey || "",
+        Authorization: `Bearer ${apiKey || ""}`,
       },
-      body: JSON.stringify({
-        method: "unified.staking.unstake",
-        params: {
-          chain,
-          network,
-          stakerAddress,
-        },
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
@@ -97,6 +113,7 @@ export async function POST(req: NextRequest) {
         originatingRequest: {
           chain,
           network,
+          amount: amount || undefined,
         },
       },
     };

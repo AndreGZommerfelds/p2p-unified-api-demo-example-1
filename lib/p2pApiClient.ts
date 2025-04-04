@@ -13,6 +13,7 @@ export type UnstakeRequest = {
   chain: string;
   network: string;
   stakerAddress: string;
+  amount?: string;
 };
 
 export type StakeResponse = {
@@ -259,7 +260,7 @@ export async function broadcastTransaction(
       throw new Error("Missing required parameter: transactionId");
     }
 
-    const response = await fetch("/api/staking/broadcastTransaction", {
+    const response = await fetch("/api/transaction/broadcastTransaction", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

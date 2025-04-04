@@ -1,0 +1,21 @@
+{
+  "transactionId": "polkadot-westend-1743795359802",
+  "error": null,
+  "result": {
+    "createdAt": "2025-04-04T19:36:00.619Z",
+    "extraData": {
+      "unsignedTransaction": "0x280406020b00204aa9d101",
+      "stashAccountAddress": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q",
+      "amount": 2
+    }
+  },
+  "_metadata": {
+    "createdAt": "2025-04-04T19:36:00.735Z",
+    "status": "created",
+    "originatingRequest": {
+      "chain": "polkadot",
+      "network": "westend",
+      "amount": "2"
+    }
+  }
+}

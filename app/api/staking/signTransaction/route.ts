@@ -1,12 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
-import { signPolkadotTransaction } from "@/lib/networks/signing-polkadot";
-import {
-  getPolkadotRpcProvider,
-  getPolkadotKeystorePath,
-  getPolkadotKeystorePassword,
-} from "@/lib/networks/polkadot.config";
+import { signTransaction } from "@/lib/networks";
 
 interface TransactionData {
   transactionId: string;
@@ -24,21 +19,16 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     console.log("Request body (detailed):", JSON.stringify(body, null, 2));
 
-    const { transactionId, chain, network: requestNetwork } = body;
+    const {
+      transactionId,
+      chain: requestChain,
+      network: requestNetwork,
+    } = body;
 
-    if (!transactionId || !chain) {
+    if (!transactionId) {
       console.error("Missing required parameters");
       return NextResponse.json(
-        { error: "Missing required parameters" },
-        { status: 400 }
-      );
-    }
-
-    // Check if chain is supported
-    if (chain !== "polkadot") {
-      console.error("Unsupported chain:", chain);
-      return NextResponse.json(
-        { error: "Only Polkadot chain is currently supported for signing" },
+        { error: "Missing transaction ID" },
         { status: 400 }
       );
     }
@@ -66,16 +56,35 @@ export async function POST(req: NextRequest) {
     ) as TransactionData;
     console.log("Transaction data loaded:", JSON.stringify(txData, null, 2));
 
+    // Check if transaction has already been signed
+    if (txData.signedTransaction) {
+      console.log(`Transaction was already signed`);
+      return NextResponse.json({
+        success: true,
+        transactionId: txData.transactionId,
+        signedTransaction: txData.signedTransaction,
+        message: "Transaction was already signed",
+      });
+    }
+
+    // Extract chain from the transaction data or request
+    const chain =
+      requestChain ||
+      txData.chain ||
+      txData._metadata?.originatingRequest?.chain ||
+      "polkadot";
+
     // Check if rawTransaction exists
-    if (!txData.rawTransaction) {
-      console.error("Transaction data does not contain raw transaction");
+    let rawTransaction = txData.rawTransaction;
+    if (!rawTransaction) {
+      console.log("Transaction data does not contain rawTransaction directly");
 
       // Check if it might be in the P2P.ORG API response format
       if (txData.result?.extraData?.unsignedTransaction) {
         console.log(
           "Found unsigned transaction in P2P.ORG API response format"
         );
-        txData.rawTransaction = txData.result.extraData.unsignedTransaction;
+        rawTransaction = txData.result.extraData.unsignedTransaction;
       } else {
         return NextResponse.json(
           { error: "Transaction data does not contain raw transaction" },
@@ -87,69 +96,30 @@ export async function POST(req: NextRequest) {
     // Get network with fallback, prioritizing:
     // 1. Network from the request
     // 2. Network from txData
-    // 3. Default to mainnet
-    let network = requestNetwork || txData.network;
+    // 3. Network from metadata
+    // 4. Default based on chain
+    let network =
+      requestNetwork ||
+      txData.network ||
+      txData._metadata?.originatingRequest?.network;
 
     if (!network) {
-      console.log("Network is undefined, defaulting to mainnet");
-      network = "mainnet";
-    } else {
-      console.log(
-        `Network specified in ${
-          requestNetwork ? "request" : "transaction data"
-        }: ${network}`
-      );
+      console.log("Network is undefined, defaulting based on chain");
+      network = chain === "solana" ? "testnet" : "mainnet";
     }
 
-    // Always update txData with the correct network
-    txData.network = network;
-
-    // Save updated network info to transaction file
-    fs.writeFileSync(txFilePath, JSON.stringify(txData, null, 2));
-
-    console.log("Using network:", network);
-
-    // Get environment variables using utility functions
-    let rpcProvider, keystorePath, password;
-    try {
-      rpcProvider = getPolkadotRpcProvider(network);
-      keystorePath = getPolkadotKeystorePath(network);
-      password = getPolkadotKeystorePassword(network);
-    } catch (error) {
-      console.error("Error getting configuration:", error);
-      return NextResponse.json(
-        {
-          error: "Missing configuration for signing",
-          details: error instanceof Error ? error.message : String(error),
-        },
-        { status: 500 }
-      );
-    }
-
-    console.log("Environment variables loaded:");
-    console.log("RPC Provider:", rpcProvider);
-    console.log("Keystore path:", keystorePath);
-    console.log("Network:", network);
+    console.log(`Using chain: ${chain}, network: ${network}`);
     console.log(
-      "Available env vars:",
-      Object.keys(process.env).filter((key) => key.startsWith("KEY"))
-    );
-
-    console.log("Attempting to sign transaction...");
-    console.log("RPC Provider:", rpcProvider);
-    console.log("Keystore path:", keystorePath);
-    console.log(
-      "Raw transaction first 100 chars:",
-      txData.rawTransaction?.substring(0, 100) || "UNDEFINED"
+      `Raw transaction first 100 chars:`,
+      rawTransaction?.substring(0, 100) || "UNDEFINED"
     );
 
     try {
-      // Sign the transaction
-      const signedTransaction = await signPolkadotTransaction({
-        rpcProvider,
-        keystorePath,
-        password,
-        rawTransaction: txData.rawTransaction,
+      // Sign the transaction using the unified signing function
+      const signedTransaction = await signTransaction({
+        chain,
+        network,
+        unsignedTransactionData: rawTransaction,
       });
 
       console.log("Transaction signed successfully");
@@ -170,7 +140,16 @@ export async function POST(req: NextRequest) {
       });
     } catch (signingError) {
       console.error("Error during signing:", signingError);
-      throw signingError;
+      return NextResponse.json(
+        {
+          error: "Failed to sign transaction",
+          details:
+            signingError instanceof Error
+              ? signingError.message
+              : "Unknown error",
+        },
+        { status: 500 }
+      );
     }
   } catch (error) {
     console.error("Error in sign transaction endpoint:", error);

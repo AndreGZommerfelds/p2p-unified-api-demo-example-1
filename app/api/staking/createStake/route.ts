@@ -43,26 +43,44 @@ export async function POST(req: NextRequest) {
 
     // Make request to P2P.ORG API
     console.log("Making request to P2P.ORG API...");
-    try {
-      const response = await fetch(
-        `${process.env.P2P_API_URL}/unified/staking/stake`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.P2P_API_KEY}`,
-          },
-          body: JSON.stringify({ chain, network, stakerAddress, amount }),
-        }
-      );
+    const apiKey = process.env.P2P_API_KEY;
+    const apiBaseUrl =
+      process.env.P2P_API_URL || "https://api-test-holesky.p2p.org/api/v1";
 
-      console.log("P2P API request completed with status:", response.status);
-      const responseText = await response.text();
+    // Use the proper REST endpoint for staking
+    const apiUrl = `${apiBaseUrl}/unified/staking/stake`;
+    console.log(`Using API URL: ${apiUrl}`);
+
+    try {
+      // Create the request to P2P.ORG API
+      console.log("Sending request with payload:", {
+        chain,
+        network,
+        stakerAddress,
+        amount,
+      });
+
+      const apiResponse = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey || ""}`,
+        },
+        body: JSON.stringify({
+          chain,
+          network,
+          stakerAddress,
+          amount: parseFloat(amount),
+        }),
+      });
+
+      console.log("P2P API request completed with status:", apiResponse.status);
+      const responseText = await apiResponse.text();
       console.log("P2P API response body:", responseText);
 
-      if (!response.ok) {
+      if (!apiResponse.ok) {
         throw new Error(
-          `API request failed: ${response.status} ${responseText}`
+          `API request failed: ${apiResponse.status} ${responseText}`
         );
       }
 

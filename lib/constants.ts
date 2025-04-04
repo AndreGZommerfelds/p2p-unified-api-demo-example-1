@@ -54,3 +54,6 @@ export const EXPLORERS: Record<Chain, Record<string, string>> = {
     testnet: "https://explorer.solana.com/tx/?cluster=testnet",
   },
 };
+
+// Chains that require an amount parameter for unstaking
+export const CHAINS_REQUIRING_UNSTAKE_AMOUNT: Chain[] = ["polkadot", "solana"];
