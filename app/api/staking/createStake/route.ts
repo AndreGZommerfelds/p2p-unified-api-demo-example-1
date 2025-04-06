@@ -7,16 +7,13 @@ export async function POST(req: NextRequest) {
   console.log("Create stake API endpoint called");
 
   try {
-    const body = await req.json();
-    console.log("Request body:", body);
-
     const {
       chain,
       network,
       stakerAddress,
       amount,
       transactionId: clientTransactionId,
-    } = body;
+    } = await req.json();
 
     // Validate required fields
     if (!chain || !network || !stakerAddress || !amount) {
@@ -32,8 +29,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log(
+      `Creating stake request for ${chain}/${network}, amount: ${amount}, staker: ${stakerAddress}`
+    );
+
     // Generate our own transaction ID with a specific format to ensure uniqueness
-    // Use client-provided ID if available, otherwise generate one
     const transactionId =
       clientTransactionId || `${chain}-${network}-${Date.now()}`;
     console.log(`Using transaction ID: ${transactionId}`);
@@ -42,10 +42,19 @@ export async function POST(req: NextRequest) {
     console.log("P2P API Key exists:", !!process.env.P2P_API_KEY);
 
     // Make request to P2P.ORG API
-    console.log("Making request to P2P.ORG API...");
     const apiKey = process.env.P2P_API_KEY;
-    const apiBaseUrl =
-      process.env.P2P_API_URL || "https://api-test-holesky.p2p.org/api/v1";
+    if (!apiKey) {
+      throw new Error(
+        "Required environment variable P2P_API_KEY is not defined"
+      );
+    }
+
+    const apiBaseUrl = process.env.P2P_API_URL;
+    if (!apiBaseUrl) {
+      throw new Error(
+        "Required environment variable P2P_API_URL is not defined"
+      );
+    }
 
     // Use the proper REST endpoint for staking
     const apiUrl = `${apiBaseUrl}/unified/staking/stake`;
@@ -60,11 +69,11 @@ export async function POST(req: NextRequest) {
         amount,
       });
 
-      const apiResponse = await fetch(apiUrl, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey || ""}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           chain,
@@ -74,13 +83,13 @@ export async function POST(req: NextRequest) {
         }),
       });
 
-      console.log("P2P API request completed with status:", apiResponse.status);
-      const responseText = await apiResponse.text();
+      console.log("P2P API request completed with status:", response.status);
+      const responseText = await response.text();
       console.log("P2P API response body:", responseText);
 
-      if (!apiResponse.ok) {
+      if (!response.ok) {
         throw new Error(
-          `API request failed: ${apiResponse.status} ${responseText}`
+          `API request failed: ${response.status} ${responseText}`
         );
       }
 

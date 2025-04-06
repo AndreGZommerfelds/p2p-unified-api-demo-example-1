@@ -24,14 +24,49 @@ export function UnstakingForm({ onUnstake, isLoading }: UnstakingFormProps) {
   if (!selectedChain || !selectedWalletAddress) return null;
 
   const balance = DUMMY_BALANCES[selectedChain][selectedWalletAddress];
-  const tokenSymbol = selectedChain === "polkadot" ? "DOT" : "SOL";
+
+  // Get the appropriate token symbol for the selected chain
+  const getTokenSymbol = (chain: string) => {
+    switch (chain) {
+      case "polkadot":
+        return "DOT";
+      case "celestia":
+        return "TIA";
+      case "solana":
+        return "SOL";
+      default:
+        return "TOKENS";
+    }
+  };
+
+  const tokenSymbol = getTokenSymbol(selectedChain);
 
   // Use the centralized configuration for chains requiring an amount
   const requiresAmount =
     CHAINS_REQUIRING_UNSTAKE_AMOUNT.includes(selectedChain);
 
+  console.log("Selected chain:", selectedChain);
+  console.log("Chain requires amount:", requiresAmount);
+  console.log(
+    "CHAINS_REQUIRING_UNSTAKE_AMOUNT:",
+    CHAINS_REQUIRING_UNSTAKE_AMOUNT
+  );
+
+  // Always use 1 as the default amount value for Celestia if nothing is entered
+  const getAmountToSubmit = () => {
+    if (requiresAmount) {
+      // For chains requiring an amount, return the entered amount or nothing
+      return amount || "";
+    }
+    // For chains not requiring an amount, return an empty string
+    return "";
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Unstaking form submitted");
+    console.log("requiresAmount:", requiresAmount);
+    console.log("current amount value:", amount, "type:", typeof amount);
 
     // Validate amount if required
     if (requiresAmount) {
@@ -41,6 +76,15 @@ export function UnstakingForm({ onUnstake, isLoading }: UnstakingFormProps) {
       }
 
       const amountNum = parseFloat(amount);
+      console.log(
+        "Parsed amount:",
+        amountNum,
+        "isNaN:",
+        isNaN(amountNum),
+        "isZero:",
+        amountNum <= 0
+      );
+
       if (isNaN(amountNum) || amountNum <= 0) {
         setError("Please enter a valid amount");
         return;
@@ -53,6 +97,8 @@ export function UnstakingForm({ onUnstake, isLoading }: UnstakingFormProps) {
     }
 
     setError("");
+    // Always pass the amount directly, don't go through getAmountToSubmit
+    console.log("Calling onUnstake with direct amount:", amount);
     onUnstake(amount);
   };
 

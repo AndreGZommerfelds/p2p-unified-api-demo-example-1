@@ -2,9 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { DUMMY_BALANCES } from "@/lib/constants";
+import {
+  DUMMY_BALANCES,
+  initializeDummyBalances,
+  CHAINS_REQUIRING_UNSTAKE_AMOUNT,
+  type Chain,
+} from "@/lib/constants";
 import { useStaking } from "@/lib/store";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StakingForm } from "@/components/sections/StakingForm";
 import { UnstakingForm } from "@/components/sections/UnstakingForm";
 import { TransactionStatus } from "@/components/shared/TransactionStatus";
@@ -49,10 +55,48 @@ export function PortfolioSection() {
     console.log("Transaction data:", transactionData);
   }, [transactionState, transactionData]);
 
+  // Add this useEffect to initialize the balances:
+  useEffect(() => {
+    // Initialize the dummy balances with addresses from environment variables
+    async function loadBalances() {
+      try {
+        await initializeDummyBalances();
+        // Force a re-render since we're updating a static object
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error initializing dummy balances:", error);
+      }
+    }
+
+    loadBalances();
+  }, []);
+
   if (!selectedChain || !selectedWalletAddress || !selectedNetwork) return null;
 
-  const balance = DUMMY_BALANCES[selectedChain][selectedWalletAddress];
-  const tokenSymbol = selectedChain === "polkadot" ? "DOT" : "SOL";
+  // And then update the balance access with a fallback
+  const balance = DUMMY_BALANCES[selectedChain][selectedWalletAddress] || {
+    total: 0,
+    available: 0,
+    staked: 0,
+    unstaking: 0,
+    rewards: 0,
+  };
+
+  // Get the appropriate token symbol for the selected chain
+  const getTokenSymbol = (chain: string) => {
+    switch (chain) {
+      case "polkadot":
+        return "DOT";
+      case "celestia":
+        return "TIA";
+      case "solana":
+        return "SOL";
+      default:
+        return "TOKENS";
+    }
+  };
+
+  const tokenSymbol = getTokenSymbol(selectedChain);
 
   const handleStake = async (amount: string) => {
     try {
@@ -116,6 +160,23 @@ export function PortfolioSection() {
     try {
       setIsLoading(true);
       console.log("Starting unstake process");
+      console.log(
+        "Amount parameter received:",
+        amount,
+        "type:",
+        typeof amount,
+        "value stringified:",
+        JSON.stringify(amount)
+      );
+
+      // Debugging - explicitly check the amount to see if it's coming through correctly
+      if (!amount) {
+        console.error("CRITICAL ERROR: Amount is empty or undefined");
+      } else if (amount === "") {
+        console.error("CRITICAL ERROR: Amount is an empty string");
+      } else if (amount === "0.1") {
+        console.log("Amount is exactly 0.1 as expected");
+      }
 
       // Create unstake request
       const unstakeRequest: UnstakeRequest = {
@@ -124,13 +185,52 @@ export function PortfolioSection() {
         stakerAddress: selectedWalletAddress,
       };
 
-      // Add amount if provided
-      if (amount) {
-        unstakeRequest.amount = amount;
-        console.log(`Including amount: ${amount} in unstake request`);
+      // For Celestia and other chains requiring amount, add it to the request
+      // Important: Check specifically if amount is valid rather than just non-empty
+      const isValidAmount =
+        amount && !isNaN(parseFloat(amount)) && parseFloat(amount) > 0;
+      console.log(
+        "Is valid amount:",
+        isValidAmount,
+        "parseFloat result:",
+        parseFloat(amount)
+      );
+
+      if (isValidAmount) {
+        const numericAmount = parseFloat(amount);
+        console.log(`Valid numeric amount: ${numericAmount}`);
+
+        if (CHAINS_REQUIRING_UNSTAKE_AMOUNT.includes(selectedChain as Chain)) {
+          // For chains requiring an amount, it should be a number inside an extra object
+          unstakeRequest.extra = { amount: numericAmount };
+          console.log(
+            `Including amount ${numericAmount} in extra object:`,
+            JSON.stringify(unstakeRequest.extra) // Make sure it's being stringified correctly
+          );
+
+          // Debug: check if extra is correctly added to the request
+          console.log("Full request object: ", JSON.stringify(unstakeRequest));
+        } else {
+          // For other chains, keep as-is
+          unstakeRequest.amount = amount;
+          console.log(`Including amount: ${amount} in unstake request`);
+        }
+      } else {
+        console.warn(
+          `Invalid or missing amount: "${amount}". This may cause validation errors for chains requiring amounts.`
+        );
       }
 
-      console.log("Creating unstake request:", unstakeRequest);
+      console.log("Final unstake request:", JSON.stringify(unstakeRequest));
+
+      // Make sure the API can see every field in the request
+      console.log("Making request to createUnstakingRequest with data:", {
+        chain: unstakeRequest.chain,
+        network: unstakeRequest.network,
+        stakerAddress: unstakeRequest.stakerAddress,
+        extra: unstakeRequest.extra,
+        amount: unstakeRequest.amount,
+      });
 
       // Make API request using our client
       const response = await createUnstakingRequest(unstakeRequest);

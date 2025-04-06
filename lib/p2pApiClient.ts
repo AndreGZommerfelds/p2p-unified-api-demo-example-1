@@ -14,6 +14,9 @@ export type UnstakeRequest = {
   network: string;
   stakerAddress: string;
   amount?: string;
+  extra?: {
+    amount: number;
+  };
 };
 
 export type StakeResponse = {
@@ -146,7 +149,20 @@ export async function createUnstakingRequest(
   request: UnstakeRequest
 ): Promise<UnstakeResponse> {
   try {
-    console.log("[p2pApiClient] Sending unstake request to API:", request);
+    console.log(
+      "[p2pApiClient] Sending unstake request to API:",
+      JSON.stringify(request)
+    );
+    console.log("[p2pApiClient] Specific fields check:");
+    console.log("- chain:", request.chain);
+    console.log("- network:", request.network);
+    console.log("- stakerAddress:", request.stakerAddress);
+    console.log("- amount:", request.amount);
+    console.log(
+      "- extra:",
+      request.extra,
+      request.extra ? JSON.stringify(request.extra) : "undefined"
+    );
 
     if (!request.chain || !request.network || !request.stakerAddress) {
       throw new Error(
@@ -154,12 +170,16 @@ export async function createUnstakingRequest(
       );
     }
 
+    // Debug the request we're about to send
+    const requestBody = JSON.stringify(request);
+    console.log("[p2pApiClient] Request body being sent:", requestBody);
+
     const response = await fetch("/api/staking/createUnstake", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(request),
+      body: requestBody,
     });
 
     if (!response.ok) {
@@ -175,7 +195,7 @@ export async function createUnstakingRequest(
     }
 
     const responseData = await response.json();
-    console.log("[p2pApiClient] Received unstake response:", responseData);
+    console.log("[p2pApiClient] Received unstaking response:", responseData);
 
     if (responseData.success !== true) {
       console.error(
@@ -260,7 +280,7 @@ export async function broadcastTransaction(
       throw new Error("Missing required parameter: transactionId");
     }
 
-    const response = await fetch("/api/transaction/broadcastTransaction", {
+    const response = await fetch("/api/staking/broadcastTransaction", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

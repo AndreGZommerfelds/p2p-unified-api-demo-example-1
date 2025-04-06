@@ -1,0 +1,52 @@
+{
+  "transactionId": "polkadot-westend-1743942444113",
+  "error": null,
+  "result": {
+    "amount": 0.1,
+    "createdAt": "2025-04-06T12:27:24.648Z",
+    "extraData": {
+      "unsignedTransaction": "0xa80406000700e87648170396835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c",
+      "stashAccountAddress": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q",
+      "rewardDestinationType": "account",
+      "rewardDestination": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q"
+    }
+  },
+  "stakerAddress": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q",
+  "chain": "polkadot",
+  "network": "westend",
+  "signedTransaction": "0x4502840096835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c0182575042f0eb44c45343c42f31870b477fb83a2954e09d51a5166704fa6e4c0c5cd050c842069313a0e28ada22fbe5002c8fd632f46037476168a1ba01c55686350320000006000700e87648170396835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c",
+  "broadcastResponse": {
+    "error": null,
+    "result": {
+      "status": "failed",
+      "extraData": {
+        "network": "westend",
+        "signedTransaction": "0x4502840096835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c0182575042f0eb44c45343c42f31870b477fb83a2954e09d51a5166704fa6e4c0c5cd050c842069313a0e28ada22fbe5002c8fd632f46037476168a1ba01c55686350320000006000700e87648170396835cead4dbf8b4c6ccf952b53b2ae7bd805ee60125df8e4763248d42f7eb2c",
+        "blockHash": "0x0f43249dc638efcb653f1dbf0772dcd78f9cbd2dcaf7713b132deab8b1adc4c1",
+        "blockId": 25484151,
+        "extrinsicId": 2,
+        "transactionHash": "0x8a98b57c34f263c82d5cb47ad04acf35debf3b7b932aca013dc2401d8242f148",
+        "signerAccount": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q",
+        "data": {
+          "args": {
+            "value": "100,000,000,000",
+            "payee": {
+              "Account": "5FU44bZkd8iza8Sw8xS9QeRamsj9MpcBiwvLBReVDLBmd25q"
+            }
+          },
+          "method": "bond",
+          "section": "staking"
+        },
+        "createdAt": "2025-04-06T12:27:54.497Z"
+      }
+    }
+  },
+  "transactionHash": "0x8a98b57c34f263c82d5cb47ad04acf35debf3b7b932aca013dc2401d8242f148",
+  "status": "failed",
+  "explorerUrl": "https://westend.subscan.io/extrinsic/0x8a98b57c34f263c82d5cb47ad04acf35debf3b7b932aca013dc2401d8242f148",
+  "_metadata": {
+    "status": "failed",
+    "broadcastedAt": "2025-04-06T12:27:54.574Z"
+  },
+  "updatedAt": "2025-04-06T12:27:54.574Z"
+}

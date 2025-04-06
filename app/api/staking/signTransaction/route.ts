@@ -67,30 +67,33 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Extract chain from the transaction data or request
-    const chain =
-      requestChain ||
-      txData.chain ||
-      txData._metadata?.originatingRequest?.chain ||
-      "polkadot";
+    // Get chain information from metadata
+    const chain = txData.chain || txData._metadata?.originatingRequest?.chain;
+    const network =
+      txData.network || txData._metadata?.originatingRequest?.network;
 
-    // Check if rawTransaction exists
-    let rawTransaction = txData.rawTransaction;
-    if (!rawTransaction) {
-      console.log("Transaction data does not contain rawTransaction directly");
+    // Special handling for Celestia transactions
+    let rawTransaction;
+    if (chain === "celestia") {
+      // For Celestia, we need to extract the unsignedTransactionData specifically
+      rawTransaction =
+        txData.result?.unsignedTransactionData || txData.unsignedTransaction; // Add our fallback
 
-      // Check if it might be in the P2P.ORG API response format
-      if (txData.result?.extraData?.unsignedTransaction) {
-        console.log(
-          "Found unsigned transaction in P2P.ORG API response format"
-        );
-        rawTransaction = txData.result.extraData.unsignedTransaction;
-      } else {
-        return NextResponse.json(
-          { error: "Transaction data does not contain raw transaction" },
-          { status: 400 }
+      if (!rawTransaction) {
+        throw new Error(
+          "Transaction data does not contain unsignedTransactionData"
         );
       }
+    } else {
+      // For other chains, use the regular rawTransaction field
+      rawTransaction =
+        txData.result?.rawTransaction ||
+        txData.result?.extraData?.unsignedTransaction ||
+        txData.unsignedTransaction;
+    }
+
+    if (!rawTransaction) {
+      throw new Error("Transaction data does not contain raw transaction");
     }
 
     // Get network with fallback, prioritizing:
@@ -98,27 +101,36 @@ export async function POST(req: NextRequest) {
     // 2. Network from txData
     // 3. Network from metadata
     // 4. Default based on chain
-    let network =
+    let networkWithFallback =
       requestNetwork ||
       txData.network ||
       txData._metadata?.originatingRequest?.network;
 
-    if (!network) {
+    if (!networkWithFallback) {
       console.log("Network is undefined, defaulting based on chain");
-      network = chain === "solana" ? "testnet" : "mainnet";
+      networkWithFallback = chain === "solana" ? "testnet" : "mainnet";
     }
 
-    console.log(`Using chain: ${chain}, network: ${network}`);
-    console.log(
-      `Raw transaction first 100 chars:`,
-      rawTransaction?.substring(0, 100) || "UNDEFINED"
-    );
+    console.log(`Using chain: ${chain}, network: ${networkWithFallback}`);
+
+    // Safe logging of transaction data that handles both string and object types
+    if (typeof rawTransaction === "string") {
+      console.log(
+        `Raw transaction first 100 chars:`,
+        rawTransaction.substring(0, 100)
+      );
+    } else {
+      console.log(
+        `Raw transaction (object):`,
+        JSON.stringify(rawTransaction).substring(0, 100) + "..."
+      );
+    }
 
     try {
       // Sign the transaction using the unified signing function
       const signedTransaction = await signTransaction({
         chain,
-        network,
+        network: networkWithFallback,
         unsignedTransactionData: rawTransaction,
       });
 

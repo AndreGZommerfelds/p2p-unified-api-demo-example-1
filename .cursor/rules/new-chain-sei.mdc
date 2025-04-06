@@ -1,0 +1,23 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Let's add a new chain called Sei.
+
+First, start by adding the new chain in the UI, like the other chains.
+For the chain parameter, use "sei".
+For the network options/parameters use
+"pacific-1" — the production network
+"atlantic-2" — a testnet for development and testing purposes.
+For the token symbol, use "SEI".
+
+Next, let's implement the stake and unstake flow in the backend.
+For stake, use [createStake.ts](mdc:api/staking/createStake.ts)
+For unstake, use [createUnstake.ts](mdc:api/staking/createUnstake.ts)
+For sign & broadcast, we need to use a new signing module, but the broadcasting is using the same shared code for all chains, which is [broadcastTransaction.ts](mdc:api/staking/broadcastTransaction.ts)
+
+To implement the signing, use this [signing-sei.ts](mdc:lib/networks/signing-sei.ts) to put the signing logic. The logic must be copied from this script [sign-and-broadcast.ts](mdc:lib/signers-sdk-main/src/sei/sign-and-broadcast.ts) but without the broadcasting part, because that is taken care of by the shared [broadcastTransaction.ts](mdc:api/staking/broadcastTransaction.ts)
+
+Please add the necessary wallet constants like private key, seed phrase, and addresses for both mainnet and testnet inside @.env similar to the other chains. Make sure our implementation uses these.
+For any chain specific constant, like RPC, please use [sei.config.js](mdc:lib/networks/sei.config.js)

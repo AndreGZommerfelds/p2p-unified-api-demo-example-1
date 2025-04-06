@@ -1,0 +1,32 @@
+{
+  "verbose": true,
+  "moduleFileExtensions": [
+    "ts",
+    "js",
+    "json"
+  ],
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "testRegex": "/src/.*\\.(test|spec).(ts|tsx|js)$",
+  "collectCoverageFrom": [
+    "src/**/*.{js,jsx,tsx,ts}",
+    "!src/main.ts",
+    "!src/migrations/**",
+    "!src/**/*.module.ts",
+    "!src/**/*.routes.ts",
+    "!src/**/*.dto.ts",
+    "!src/**/*.mapper.ts",
+    "!src/**/index.ts",
+    "!src/**/*.spec.ts",
+    "!**/node_modules/**",
+    "!**/vendor/**"
+  ],
+  "coverageReporters": [
+    "json",
+    "lcov"
+  ],
+  "testEnvironmentOptions": {
+    "url": "http://localhost"
+  }
+}

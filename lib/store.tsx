@@ -1,12 +1,18 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import {
   Chain,
   Network,
   CHAINS,
   NETWORKS,
-  WALLET_ADDRESSES,
+  initializeDummyBalances,
 } from "./constants";
 
 type StakingState = {
@@ -36,6 +42,19 @@ const StakingContext = createContext<StakingContextType | undefined>(undefined);
 
 export function StakingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<StakingState>(initialState);
+
+  // Initialize the DUMMY_BALANCES with addresses from .env when the app loads
+  useEffect(() => {
+    async function loadBalances() {
+      try {
+        await initializeDummyBalances();
+      } catch (error) {
+        console.error("Error initializing dummy balances:", error);
+      }
+    }
+
+    loadBalances();
+  }, []);
 
   const selectChain = (chain: Chain | null) => {
     setState((prev) => ({

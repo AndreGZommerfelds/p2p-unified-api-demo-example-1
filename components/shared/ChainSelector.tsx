@@ -22,7 +22,11 @@ export function ChainSelector() {
           >
             <span className="text-lg font-semibold">{chain}</span>
             <span className="text-xs text-muted-foreground">
-              {chain === "polkadot" ? "DOT" : "SOL"}
+              {chain === "polkadot"
+                ? "DOT"
+                : chain === "solana"
+                ? "SOL"
+                : "TIA"}
             </span>
           </Button>
         ))}

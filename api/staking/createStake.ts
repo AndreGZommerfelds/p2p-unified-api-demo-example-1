@@ -25,8 +25,18 @@ export async function POST(req: NextRequest) {
 
     // Make request to P2P.ORG API
     const apiKey = process.env.P2P_API_KEY;
-    const apiBaseUrl =
-      process.env.P2P_API_URL || "https://api-test-holesky.p2p.org/api/v1";
+    if (!apiKey) {
+      throw new Error(
+        "Required environment variable P2P_API_KEY is not defined"
+      );
+    }
+
+    const apiBaseUrl = process.env.P2P_API_URL;
+    if (!apiBaseUrl) {
+      throw new Error(
+        "Required environment variable P2P_API_URL is not defined"
+      );
+    }
 
     // Use the proper REST endpoint for staking
     const apiUrl = `${apiBaseUrl}/unified/staking/stake`;
@@ -36,7 +46,7 @@ export async function POST(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey || ""}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         chain,

@@ -1,0 +1,45 @@
+{
+  "transactionId": "celestia-celestia-mocha-testnet-1743941560375",
+  "error": null,
+  "result": {
+    "amount": 1,
+    "unsignedTransactionData": {
+      "messages": [
+        {
+          "typeUrl": "/cosmos.staking.v1beta1.MsgDelegate",
+          "value": {
+            "delegatorAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5",
+            "validatorAddress": "celestiavaloper1amm0umxqxxw8j2q60x78xs32s089606sdmvx92",
+            "amount": {
+              "denom": "utia",
+              "amount": "1000000"
+            }
+          }
+        }
+      ],
+      "fee": {
+        "amount": [
+          {
+            "amount": "6500",
+            "denom": "utia"
+          }
+        ],
+        "gas": "260000"
+      },
+      "memo": "",
+      "encodedBody": "0aa1010a232f636f736d6f732e7374616b696e672e763162657461312e4d736744656c6567617465127a0a2f63656c6573746961316561676c7539676476386678347767666a6168777166766c7a6e74347875633935776e666435123663656c657374696176616c6f70657231616d6d30756d7871787877386a32713630783738787333327330383936303673646d767839321a0f0a0475746961120731303030303030",
+      "encodedAuthInfo": "12120a0c0a047574696112043635303010a0ef0f",
+      "messageHash": "40474c438beced18ca56b7caef1371579ebc4ed4a0907c90b624a0e9b959cf40"
+    },
+    "createdAt": "2025-04-06T12:12:41.912Z",
+    "extraData": {
+      "currency": "tia",
+      "validatorAddress": "celestiavaloper1amm0umxqxxw8j2q60x78xs32s089606sdmvx92",
+      "stashAccountAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5",
+      "rewardDestinationAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5"
+    }
+  },
+  "stakerAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5",
+  "chain": "celestia",
+  "network": "celestia-mocha-testnet"
+}

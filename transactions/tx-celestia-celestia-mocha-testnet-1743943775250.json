@@ -1,0 +1,102 @@
+{
+  "transactionId": "celestia-celestia-mocha-testnet-1743943775250",
+  "error": null,
+  "result": {
+    "unsignedTransactionData": {
+      "messages": [
+        {
+          "typeUrl": "/cosmos.staking.v1beta1.MsgUndelegate",
+          "value": {
+            "delegatorAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5",
+            "validatorAddress": "celestiavaloper1amm0umxqxxw8j2q60x78xs32s089606sdmvx92",
+            "amount": {
+              "denom": "utia",
+              "amount": "1000000"
+            }
+          }
+        }
+      ],
+      "fee": {
+        "amount": [
+          {
+            "amount": "5411",
+            "denom": "utia"
+          }
+        ],
+        "gas": "216440"
+      },
+      "memo": "",
+      "encodedBody": "0aa3010a252f636f736d6f732e7374616b696e672e763162657461312e4d7367556e64656c6567617465127a0a2f63656c6573746961316561676c7539676476386678347767666a6168777166766c7a6e74347875633935776e666435123663656c657374696176616c6f70657231616d6d30756d7871787877386a32713630783738787333327330383936303673646d767839321a0f0a0475746961120731303030303030",
+      "encodedAuthInfo": "0a500a460a1f2f636f736d6f732e63727970746f2e736563703235366b312e5075624b657912230a21029b901c640bf49bb189ca2f4d7aa7b86b6222bbec90f49bf589b4c7cc033c8c9412040a020801180112120a0c0a047574696112043534313110f89a0d",
+      "messageHash": "1b24740da8a777547d7ff0c0d257a98938eeca3ae9eda613a0309da9f92637be"
+    },
+    "createdAt": "2025-04-06T12:49:36.463Z",
+    "extraData": {
+      "amount": 1,
+      "currency": "tia",
+      "validatorAddress": "celestiavaloper1amm0umxqxxw8j2q60x78xs32s089606sdmvx92",
+      "stashAccountAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5",
+      "rewardDestinationAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5"
+    }
+  },
+  "unsignedTransaction": {
+    "messages": [
+      {
+        "typeUrl": "/cosmos.staking.v1beta1.MsgUndelegate",
+        "value": {
+          "delegatorAddress": "celestia1eaglu9gdv8fx4wgfjahwqfvlznt4xuc95wnfd5",
+          "validatorAddress": "celestiavaloper1amm0umxqxxw8j2q60x78xs32s089606sdmvx92",
+          "amount": {
+            "denom": "utia",
+            "amount": "1000000"
+          }
+        }
+      }
+    ],
+    "fee": {
+      "amount": [
+        {
+          "amount": "5411",
+          "denom": "utia"
+        }
+      ],
+      "gas": "216440"
+    },
+    "memo": "",
+    "encodedBody": "0aa3010a252f636f736d6f732e7374616b696e672e763162657461312e4d7367556e64656c6567617465127a0a2f63656c6573746961316561676c7539676476386678347767666a6168777166766c7a6e74347875633935776e666435123663656c657374696176616c6f70657231616d6d30756d7871787877386a32713630783738787333327330383936303673646d767839321a0f0a0475746961120731303030303030",
+    "encodedAuthInfo": "0a500a460a1f2f636f736d6f732e63727970746f2e736563703235366b312e5075624b657912230a21029b901c640bf49bb189ca2f4d7aa7b86b6222bbec90f49bf589b4c7cc033c8c9412040a020801180112120a0c0a047574696112043534313110f89a0d",
+    "messageHash": "1b24740da8a777547d7ff0c0d257a98938eeca3ae9eda613a0309da9f92637be"
+  },
+  "_metadata": {
+    "createdAt": "2025-04-06T12:49:36.586Z",
+    "status": "success",
+    "originatingRequest": {
+      "chain": "celestia",
+      "network": "celestia-mocha-testnet",
+      "extra": {
+        "amount": 1
+      }
+    },
+    "broadcastedAt": "2025-04-06T12:49:47.497Z"
+  },
+  "signedTransaction": "0aa6010aa3010a252f636f736d6f732e7374616b696e672e763162657461312e4d7367556e64656c6567617465127a0a2f63656c6573746961316561676c7539676476386678347767666a6168777166766c7a6e74347875633935776e666435123663656c657374696176616c6f70657231616d6d30756d7871787877386a32713630783738787333327330383936303673646d767839321a0f0a047574696112073130303030303012660a500a460a1f2f636f736d6f732e63727970746f2e736563703235366b312e5075624b657912230a21029b901c640bf49bb189ca2f4d7aa7b86b6222bbec90f49bf589b4c7cc033c8c9412040a020801180112120a0c0a047574696112043534313110f89a0d1a401f7552cea8350cf23c497de6b2d0e312fd99120cbc1a7b219421ddf982968eb56cb8e05fd89ea41dbbcae48ca694046ef22bcbb3524f14ce45c373af9cb45755",
+  "broadcastResponse": {
+    "error": null,
+    "result": {
+      "status": "success",
+      "extraData": {
+        "blockId": 5545220,
+        "fee": 0.005411,
+        "gas": {
+          "used": 182593,
+          "wanted": 216440
+        },
+        "transactionHash": "DB894EEFCE884EB2F7DC350280EE22983F35F0E55FA53C64D32505E5FFFB2B86"
+      }
+    }
+  },
+  "transactionHash": "DB894EEFCE884EB2F7DC350280EE22983F35F0E55FA53C64D32505E5FFFB2B86",
+  "status": "success",
+  "explorerUrl": "https://explorer.celestia.org/mocha-4/tx/DB894EEFCE884EB2F7DC350280EE22983F35F0E55FA53C64D32505E5FFFB2B86",
+  "updatedAt": "2025-04-06T12:49:47.497Z"
+}

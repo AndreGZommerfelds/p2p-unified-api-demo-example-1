@@ -39,7 +39,21 @@ export function TransactionStatus({
   onSignAndBroadcast,
   onClose,
 }: TransactionStatusProps) {
-  const tokenSymbol = chain === "polkadot" ? "DOT" : "SOL";
+  // Get the appropriate token symbol for the selected chain
+  const getTokenSymbol = (chain: string) => {
+    switch (chain) {
+      case "polkadot":
+        return "DOT";
+      case "celestia":
+        return "TIA";
+      case "solana":
+        return "SOL";
+      default:
+        return "TOKENS";
+    }
+  };
+
+  const tokenSymbol = getTokenSymbol(chain);
 
   // Add debug handlers that log before calling the actual handlers
   const handleSignAndBroadcastClick = () => {

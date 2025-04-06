@@ -21,7 +21,22 @@ export function StakingForm({ onStake, isLoading }: StakingFormProps) {
   if (!selectedChain || !selectedWalletAddress) return null;
 
   const balance = DUMMY_BALANCES[selectedChain][selectedWalletAddress];
-  const tokenSymbol = selectedChain === "polkadot" ? "DOT" : "SOL";
+
+  // Get the appropriate token symbol for the selected chain
+  const getTokenSymbol = (chain: string) => {
+    switch (chain) {
+      case "polkadot":
+        return "DOT";
+      case "celestia":
+        return "TIA";
+      case "solana":
+        return "SOL";
+      default:
+        return "TOKENS";
+    }
+  };
+
+  const tokenSymbol = getTokenSymbol(selectedChain);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

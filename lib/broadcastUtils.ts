@@ -17,6 +17,10 @@ export function getExplorerUrl(
     kusama: {
       mainnet: "https://kusama.subscan.io/extrinsic/",
     },
+    celestia: {
+      "celestia-mainnet-beta": "https://explorer.celestia.org/mainnet/tx/",
+      "celestia-mocha-testnet": "https://testnet.celenium.io/tx/",
+    },
     // Add more chains as needed
   };
 
@@ -82,8 +86,14 @@ export async function broadcastTransactionToAPI(transactionId: string) {
 
   // Get API key from environment variables
   const apiKey = process.env.P2P_API_KEY;
-  const apiBaseUrl =
-    process.env.P2P_API_URL || "https://api-test-holesky.p2p.org/api/v1";
+  if (!apiKey) {
+    throw new Error("Required environment variable P2P_API_KEY is not defined");
+  }
+
+  const apiBaseUrl = process.env.P2P_API_URL;
+  if (!apiBaseUrl) {
+    throw new Error("Required environment variable P2P_API_URL is not defined");
+  }
 
   // Use the proper REST endpoint for transaction broadcasting
   const apiUrl = `${apiBaseUrl}/unified/transaction/broadcast`;
@@ -107,7 +117,7 @@ export async function broadcastTransactionToAPI(transactionId: string) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey || ""}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify(broadcastRequest),
   });

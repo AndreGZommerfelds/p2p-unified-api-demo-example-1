@@ -25,7 +25,7 @@ export async function signSolanaTransaction({
 
   if (!privateKey) {
     throw new Error(
-      `Missing private key for Solana ${network}. Set ${privateKeyEnvVar} in .env file`
+      `Missing private key for Solana ${network}. Set ${privateKeyEnvVar}`
     );
   }
 
