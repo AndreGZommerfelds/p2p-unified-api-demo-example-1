@@ -36,6 +36,15 @@ yarn-error.log*
 # ignore the entire secrets directory
 config/secrets/
 
+# ignore signers-sdk-main directory
+lib/signers-sdk-main/
+
+# ignore files inside transactions directories
+@transactions/*
+transactions/*
+!@transactions/.gitkeep
+!transactions/.gitkeep
+
 # vercel
 .vercel
 
