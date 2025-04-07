@@ -24,8 +24,8 @@ All API interactions are handled through a internal proxy layer that manages aut
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-organization/p2p-staking-showcase.git
-cd p2p-staking-showcase
+git clone https://github.com/AndreGZommerfelds/p2p-unified-api-demo-example-1.git
+cd p2p-unified-api-demo-example-1
 ```
 
 2. Install dependencies:
