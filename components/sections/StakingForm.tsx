@@ -59,7 +59,15 @@ export function StakingForm({ onStake, isLoading }: StakingFormProps) {
     }
 
     setError("");
-    onStake(amount);
+
+    // Convert SOL to lamports if the selected chain is Solana
+    let amountToSubmit = amount;
+    if (selectedChain === "solana") {
+      amountToSubmit = solToLamports(amountNum);
+      console.log(`Converting ${amountNum} SOL to ${amountToSubmit} lamports`);
+    }
+
+    onStake(amountToSubmit);
   };
 
   return (

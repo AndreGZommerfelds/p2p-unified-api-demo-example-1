@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Go Multi-Chain with One API",
+  title: "Staking Interface Demo",
   description: "A reference implementation for P2P.ORG's Unified Staking API",
 };
 

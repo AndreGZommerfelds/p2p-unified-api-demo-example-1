@@ -48,6 +48,9 @@ transactions/*
 # vercel
 .vercel
 
+# cursor
+/cursor
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

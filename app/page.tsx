@@ -5,7 +5,9 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b">
         <div className="container mx-auto py-4 px-4 flex items-center">
-          <h1 className="text-3xl font-bold">Go Multi-Chain with One API</h1>
+          <h1 className="text-3xl font-bold">
+            Staking Interface Demo - P2P.ORG Unified API
+          </h1>
         </div>
       </header>
 

@@ -26,7 +26,7 @@ export function StakingContent() {
   return (
     <div className="flex flex-col items-center justify-center py-10">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-4">P2P.ORG Staking Interface</h2>
+        <h2 className="text-3xl font-bold mb-4">Start Staking!</h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
           Connect your wallet to start staking with P2P.ORG's unified staking
           API. Manage your assets across multiple chains with ease.

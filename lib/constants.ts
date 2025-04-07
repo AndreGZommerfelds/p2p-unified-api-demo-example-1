@@ -1,4 +1,5 @@
-export const CHAINS = ["polkadot", "solana", "celestia"] as const;
+//export const CHAINS = ["polkadot", "solana", "celestia"] as const; // SOLANA IS CURRENTLY DISABLED
+export const CHAINS = ["polkadot", "celestia"] as const;
 export type Chain = (typeof CHAINS)[number];
 
 export const NETWORKS: Record<Chain, readonly string[]> = {
